@@ -1,13 +1,13 @@
 __author__ = 'donnywdavis'
 __project__ = 'Battleship'
 
+from random import randint
+
 # Create our 10x10 grid for the game board
 grid = []
 for index in range(10):
     grid.append(["O"] * 10)
 
-# List of ships for the board
-shipsList = ["battleship", "carrier", "submarine"]
 # Dictionary of ship details
 ships = {
     "battleship": {
@@ -29,6 +29,16 @@ ships = {
         "end": []
     }
 }
+
+# Populate the ships onto the board
+for ship in ships:
+    ships[ship]["start"] = [randint(0, (len(board) - 1) - ships[ship]["length"]), randint(0, len(board) - 1)]
+    if ships[ship]["start"][1] + ships[ship]["length"] > 10:
+        ships[ship]["direction"] = "V"
+        ships[ship]["end"] = [ships[ship]["start"][1], (ships[ship]["start"][0] + ships[ship]["length"]) - 1]
+    else:
+        ships[ship]["direction"] = "H"
+        ships[ship]["end"] = [ships[ship]["start"][0], (ships[ship]["start"][1] + ships[ship]["length"]) - 1]
 
 
 # Draw the board to the screen

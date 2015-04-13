@@ -12,33 +12,25 @@ for index in range(10):
 ships = {
     "battleship": {
         "length": 4,
-        "direction": "",
-        "start": [],
-        "end": []
+        "positions": []
     },
     "carrier": {
         "length": 6,
-        "direction": "",
-        "start": [],
-        "end": []
+        "positions": []
     },
     "submarine": {
         "length": 3,
-        "direction": "",
-        "start": [],
-        "end": []
+        "positions": []
     }
 }
 
 # Populate the ships onto the board
 for ship in ships:
-    ships[ship]["start"] = [randint(0, (len(board) - 1) - ships[ship]["length"]), randint(0, len(board) - 1)]
-    if ships[ship]["start"][1] + ships[ship]["length"] > 10:
-        ships[ship]["direction"] = "V"
-        ships[ship]["end"] = [ships[ship]["start"][1], (ships[ship]["start"][0] + ships[ship]["length"]) - 1]
+    startPoint = [randint(0, (len(board) - 1) - ships[ship]["length"]), randint(0, len(board) - 1)]
+    if startPoint[1] + ships[ship]["length"] > 10:
+        ships[ship]["positions"] = [[x, startPoint[1]] for x in range(startPoint[0], (ships[ship]["length"] + startPoint[0]))]
     else:
-        ships[ship]["direction"] = "H"
-        ships[ship]["end"] = [ships[ship]["start"][0], (ships[ship]["start"][1] + ships[ship]["length"]) - 1]
+        ships[ship]["positions"] = [[startPoint[0], y] for y in range(startPoint[1], (ships[ship]["length"] + startPoint[1]))]
 
 
 # Draw the board to the screen

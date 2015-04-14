@@ -47,3 +47,14 @@ class GameBoard(object):
     def mark_miss(self, row, column):
         self.grid[row][column] = "X"
         print("Miss!")
+
+    # Update point on the board to show a ship position
+    def mark_ship_position(self, row, column):
+        self.grid[row][column] = "S"
+
+    # Check if a given position is a hit or not
+    def position_is_a_hit(self, row, column):
+        if self.grid[row][column] == "H":
+            return True
+        else:
+            return False

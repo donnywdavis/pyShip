@@ -72,8 +72,8 @@ def hit(selection):
 def show_ships():
     for ship in ships:
         for position in ships[ship]["positions"]:
-            if board.grid[int(position[0])][int(position[1])] != "H":
-                board.grid[int(position[0])][int(position[1])] = "S"
+            if not board.position_is_a_hit(selection[0], selection[1]):
+                board.mark_ship_position(position[0], position[1])
     board.draw()
 
 

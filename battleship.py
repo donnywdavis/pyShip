@@ -55,29 +55,54 @@ for ship in ships:
         ships[ship]["positions"] = shipPosition
 
 
+# Check if we get a hit
+def hit(selection):
+    for ship in ships:
+        if selection in ships[ship]["positions"]:
+            return True
+    return False
+
+
 # Draw the board to the screen
 def draw_board(board):
     for row in board:
         print(" ".join(row))
 
 
+# Show position of ships after game is over
+def show_ships():
+    for ship in ships:
+        for position in ships[ship]["positions"]:
+            if grid[int(position[0])][int(position[1])] != "H":
+                grid[int(position[0])][int(position[1])] = "S"
+    draw_board(grid)
+
+
 draw_board(grid)
 
 # Loop to try and sink a ship
 turns = 1
-maxTurns = 3
+maxTurns = 6
 while turns <= maxTurns:
-    row = input("Select a row: ")
+    row = input("\nSelect a row: ")
     column = input("Select a column: ")
     selection = [(int(row) - 1), (int(column) - 1)]
 
     # Check for some errors
     if selection[0] < 1 or selection[0] > 9 or \
        selection[1] < 1 or selection[1] > 9:
-        print("Invalid selection, try again.")
+        print("\nInvalid selection, try again.")
     elif grid[selection[0]][selection[1]] == "X":
-        print("You've already selected that target")
+        print("\nYou've already selected that target")
     else:
-        grid[selection[0]][selection[1]] = "X"
+        if hit(selection):
+            print("Boom!")
+            grid[selection[0]][selection[1]] = "H"
+        else:
+            print("Miss!")
+            grid[selection[0]][selection[1]] = "X"
         draw_board(grid)
         turns += 1
+else:
+    print("\nGame Over!")
+    show_ships()

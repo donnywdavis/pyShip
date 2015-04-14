@@ -28,15 +28,18 @@ def valid_ship_position(positions):
 ships = {
     "battleship": {
         "length": 4,
-        "positions": []
+        "positions": [],
+        "hits": 0
     },
     "carrier": {
         "length": 6,
-        "positions": []
+        "positions": [],
+        "hits": 0
     },
     "submarine": {
         "length": 3,
-        "positions": []
+        "positions": [],
+        "hits": 0
     }
 }
 
@@ -59,6 +62,9 @@ for ship in ships:
 def hit(selection):
     for ship in ships:
         if selection in ships[ship]["positions"]:
+            ships[ship]["hits"] += 1
+            if ships[ship]["hits"] == ships[ship]["length"]:
+                print("You sank the %s" % ship)
             return True
     return False
 

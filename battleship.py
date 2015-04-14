@@ -88,18 +88,15 @@ while turns <= maxTurns:
     selection = [(int(row) - 1), (int(column) - 1)]
 
     # Check for some errors
-    if selection[0] < 0 or selection[0] > 9 or \
-       selection[1] < 0 or selection[1] > 9:
+    if not board.valid_selection(selection[0], selection[1]):
         print("\nInvalid selection, try again.")
-    elif board.grid[selection[0]][selection[1]] == "X":
+    elif board.position_already_selected(selection[0], selection[1]):
         print("\nYou've already selected that target")
     else:
         if hit(selection):
-            print("Boom!")
-            board.grid[selection[0]][selection[1]] = "H"
+            board.mark_hit(selection[0], selection[1])
         else:
-            print("Miss!")
-            board.grid[selection[0]][selection[1]] = "X"
+            board.mark_miss(selection[0], selection[1])
         board.draw()
         turns += 1
 else:

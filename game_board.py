@@ -23,3 +23,27 @@ class GameBoard(object):
     def draw(self):
         for row in self.grid:
             print(" ".join(row))
+
+    # Check if a valid selection was made
+    def valid_selection(self, row, column):
+        if row < 0 or row > 9 or column < 0 or column > 9:
+            return False
+        else:
+            return True
+
+    # Check if the position has already been selected
+    def position_already_selected(self, row, column):
+        if self.grid[row][column] == "X":
+            return True
+        else:
+            return False
+
+    # Update point on the board for a hit
+    def mark_hit(self, row, column):
+        self.grid[row][column] = "H"
+        print("Boom!")
+
+    # Update point on the board for a miss
+    def mark_miss(self, row, column):
+        self.grid[row][column] = "X"
+        print("Miss!")

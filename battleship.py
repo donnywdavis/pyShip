@@ -2,13 +2,12 @@ __author__ = 'donnywdavis'
 __project__ = 'Battleship'
 
 from random import randint
+from game_board import GameBoard
 
 print("Let's play Battleship!")
 
 # Create our 10x10 grid for the game board
-grid = []
-for index in range(10):
-    grid.append(["O"] * 10)
+board = GameBoard(10)
 
 
 # Check if a list of positions on the grid is already being used by another ship
@@ -47,7 +46,7 @@ ships = {
 for ship in ships:
     shipPosition = []
     while not valid_ship_position(shipPosition):
-        startPoint = [randint(0, (len(grid) - 1) - int(ships[ship]["length"])), randint(0, len(grid) - 1)]
+        startPoint = [randint(0, (board.length - 1) - int(ships[ship]["length"])), randint(0, board.length - 1)]
         if startPoint[1] + ships[ship]["length"] > 10:
             shipPosition = [[x, startPoint[1]] for x in range(startPoint[0],
                                                               (int(ships[ship]["length"]) + startPoint[0]))]
@@ -69,22 +68,16 @@ def hit(selection):
     return False
 
 
-# Draw the board to the screen
-def draw_board(board):
-    for row in board:
-        print(" ".join(row))
-
-
 # Show position of ships after game is over
 def show_ships():
     for ship in ships:
         for position in ships[ship]["positions"]:
-            if grid[int(position[0])][int(position[1])] != "H":
-                grid[int(position[0])][int(position[1])] = "S"
-    draw_board(grid)
+            if board.grid[int(position[0])][int(position[1])] != "H":
+                board.grid[int(position[0])][int(position[1])] = "S"
+    board.draw()
 
 
-draw_board(grid)
+board.draw()
 
 # Loop to try and sink a ship
 turns = 1
@@ -98,16 +91,16 @@ while turns <= maxTurns:
     if selection[0] < 0 or selection[0] > 9 or \
        selection[1] < 0 or selection[1] > 9:
         print("\nInvalid selection, try again.")
-    elif grid[selection[0]][selection[1]] == "X":
+    elif board.grid[selection[0]][selection[1]] == "X":
         print("\nYou've already selected that target")
     else:
         if hit(selection):
             print("Boom!")
-            grid[selection[0]][selection[1]] = "H"
+            board.grid[selection[0]][selection[1]] = "H"
         else:
             print("Miss!")
-            grid[selection[0]][selection[1]] = "X"
-        draw_board(grid)
+            board.grid[selection[0]][selection[1]] = "X"
+        board.draw()
         turns += 1
 else:
     print("\nGame Over!")

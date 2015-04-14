@@ -89,8 +89,8 @@ while turns <= maxTurns:
     selection = [(int(row) - 1), (int(column) - 1)]
 
     # Check for some errors
-    if selection[0] < 1 or selection[0] > 9 or \
-       selection[1] < 1 or selection[1] > 9:
+    if selection[0] < 0 or selection[0] > 9 or \
+       selection[1] < 0 or selection[1] > 9:
         print("\nInvalid selection, try again.")
     elif grid[selection[0]][selection[1]] == "X":
         print("\nYou've already selected that target")

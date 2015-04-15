@@ -7,7 +7,7 @@ from game_board import GameBoard
 print("Let's play Battleship!")
 
 # Create our 10x10 grid for the game board
-board = GameBoard(10)
+board = GameBoard(10, 6)
 
 
 # Check if a list of positions on the grid is already being used by another ship
@@ -72,7 +72,7 @@ def hit(selection):
 def show_ships():
     for ship in ships:
         for position in ships[ship]["positions"]:
-            if not board.position_is_a_hit(selection[0], selection[1]):
+            if not board.position_is_a_hit(position[0], position[1]):
                 board.mark_ship_position(position[0], position[1])
     board.draw()
 
@@ -80,9 +80,8 @@ def show_ships():
 board.draw()
 
 # Loop to try and sink a ship
-turns = 1
-maxTurns = 6
-while turns <= maxTurns:
+turn = 1
+while turn <= board.turns:
     row = input("\nSelect a row: ")
     column = input("Select a column: ")
     selection = [(int(row) - 1), (int(column) - 1)]
@@ -98,7 +97,7 @@ while turns <= maxTurns:
         else:
             board.mark_miss(selection[0], selection[1])
         board.draw()
-        turns += 1
+        turn += 1
 else:
     print("\nGame Over!")
     show_ships()

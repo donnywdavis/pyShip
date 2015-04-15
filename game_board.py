@@ -7,14 +7,12 @@ __author__ = 'donnywdavis'
 
 class GameBoard(object):
 
-    # Global class variables
-    grid = []
-    length = 0
-
     # Initialize the class
-    def __init__(self, size):
+    def __init__(self, size, turns):
         self.size = size
+        self.turns = turns
         # initialize the grid to the size specified
+        self.grid = []
         for i in range(size):
             self.grid.append(["O"] * size)
         self.length = len(self.grid)

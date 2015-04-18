@@ -13,6 +13,7 @@ board = GameBoard(10, 6)
 board.add_ship("battleship", 4)
 board.add_ship("carrier", 6)
 board.add_ship("submarine", 3)
+print(board.ship_positions)
 
 
 # Check if a list of positions on the grid is already being used by another ship
@@ -97,7 +98,7 @@ while turn <= board.turns:
     elif board.position_already_selected(selection[0], selection[1]):
         print("\nYou've already selected that target")
     else:
-        if hit(selection):
+        if board.hit_detected(selection):
             board.mark_hit(selection[0], selection[1])
         else:
             board.mark_miss(selection[0], selection[1])

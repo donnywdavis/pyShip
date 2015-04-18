@@ -13,6 +13,7 @@ class GameBoard(object):
     # Global variables
     HIT = "H"
     MISS = "X"
+    OCEAN = "O"
     SHIP = "S"
 
     # Initialize the class
@@ -22,7 +23,7 @@ class GameBoard(object):
         # initialize the grid to the size specified
         self.grid = []
         for i in range(size):
-            self.grid.append(["O"] * size)
+            self.grid.append([self.OCEAN] * size)
         self.length = len(self.grid)
         self.ships = {}
         self.ship_positions = {}
@@ -41,7 +42,7 @@ class GameBoard(object):
 
     # Check if the position has already been selected
     def position_already_selected(self, row, column):
-        if self.grid[row][column] == self.MISS:
+        if self.grid[row][column] != self.OCEAN:
             return True
         else:
             return False
@@ -49,6 +50,10 @@ class GameBoard(object):
     # Update point on the board for a hit
     def mark_hit(self, row, column):
         self.grid[row][column] = self.HIT
+        ship = self.get_ship_name([row, column])
+        self.ships[ship]["hits"] += 1
+        if self.ships[ship]["hits"] == self.ships[ship]["length"]:
+            print("You sank the %s" % ship)
         print("Boom!")
 
     # Update point on the board for a miss
@@ -78,7 +83,7 @@ class GameBoard(object):
     # Set the positions of the ship on the board
     def set_ship_position(self, length):
         ship_position = []
-        while not self.position_in_use(ship_position):
+        while self.position_in_use(ship_position):
             start = [randint(0, (self.length - 1) - length), randint(0, self.length - 1)]
             if start[1] + length > 10:
                 ship_position = [[x, start[1]] for x in range(start[0], (length + start[0]))]
@@ -90,12 +95,25 @@ class GameBoard(object):
     # Check that position has not already been used for another ship
     def position_in_use(self, position):
         if not position:
-            return False
+            return True
 
         for ship in self.ship_positions.keys():
             if position in self.ship_positions[ship]:
                 return True
         else:
-            if "positions" not in self.ship_positions.keys():
-                return True
             return False
+
+    # Check if we get a hit from the selection
+    def hit_detected(self, selection):
+        for ship in self.ship_positions:
+            if selection in self.ship_positions[ship]:
+                return True
+        return False
+
+    # Get ship name for a given position
+    def get_ship_name(self, position):
+        for ship in self.ship_positions:
+            if position in self.ship_positions[ship]:
+                return ship
+        else:
+            return ""

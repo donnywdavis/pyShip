@@ -9,6 +9,11 @@ print("Let's play Battleship!")
 # Create our 10x10 grid for the game board
 board = GameBoard(10, 6)
 
+# Create our ships
+board.add_ship("battleship", 4)
+board.add_ship("carrier", 6)
+board.add_ship("submarine", 3)
+
 
 # Check if a list of positions on the grid is already being used by another ship
 def valid_ship_position(positions):

@@ -117,3 +117,11 @@ class GameBoard(object):
                 return ship
         else:
             return ""
+
+    # Show all of the ships on the board when the game is over
+    def show_all_ships(self):
+        for ship, positions in self.ship_positions.items():
+            for position in positions:
+                if not self.position_is_a_hit(position[0], position[1]):
+                    self.mark_ship_position(position[0], position[1])
+        self.draw()

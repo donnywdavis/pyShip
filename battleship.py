@@ -63,17 +63,6 @@ for ship in ships:
         ships[ship]["positions"] = shipPosition
 
 
-# Check if we get a hit
-def hit(selection):
-    for ship in ships:
-        if selection in ships[ship]["positions"]:
-            ships[ship]["hits"] += 1
-            if ships[ship]["hits"] == ships[ship]["length"]:
-                print("You sank the %s" % ship)
-            return True
-    return False
-
-
 # Show position of ships after game is over
 def show_ships():
     for ship in ships:
@@ -106,4 +95,4 @@ while turn <= board.turns:
         turn += 1
 else:
     print("\nGame Over!")
-    show_ships()
+    board.show_all_ships()

@@ -1,7 +1,6 @@
 __author__ = 'donnywdavis'
 __project__ = 'Battleship'
 
-from random import randint
 from game_board import GameBoard
 
 print("Let's play Battleship!")
@@ -13,64 +12,6 @@ board = GameBoard(10, 6)
 board.add_ship("battleship", 4)
 board.add_ship("carrier", 6)
 board.add_ship("submarine", 3)
-print(board.ship_positions)
-
-
-# Check if a list of positions on the grid is already being used by another ship
-def valid_ship_position(positions):
-    if not positions:
-        return False
-
-    for thisShip in ships:
-        for position in positions:
-            if position in ships[thisShip]["positions"]:
-                return False
-
-    return True
-
-
-# Dictionary of ship details
-ships = {
-    "battleship": {
-        "length": 4,
-        "positions": [],
-        "hits": 0
-    },
-    "carrier": {
-        "length": 6,
-        "positions": [],
-        "hits": 0
-    },
-    "submarine": {
-        "length": 3,
-        "positions": [],
-        "hits": 0
-    }
-}
-
-# Populate the ships onto the board
-for ship in ships:
-    shipPosition = []
-    while not valid_ship_position(shipPosition):
-        startPoint = [randint(0, (board.length - 1) - int(ships[ship]["length"])), randint(0, board.length - 1)]
-        if startPoint[1] + ships[ship]["length"] > 10:
-            shipPosition = [[x, startPoint[1]] for x in range(startPoint[0],
-                                                              (int(ships[ship]["length"]) + startPoint[0]))]
-        else:
-            shipPosition = [[startPoint[0], y] for y in range(startPoint[1],
-                                                              (int(ships[ship]["length"]) + startPoint[1]))]
-    else:
-        ships[ship]["positions"] = shipPosition
-
-
-# Show position of ships after game is over
-def show_ships():
-    for ship in ships:
-        for position in ships[ship]["positions"]:
-            if not board.position_is_a_hit(position[0], position[1]):
-                board.mark_ship_position(position[0], position[1])
-    board.draw()
-
 
 board.draw()
 

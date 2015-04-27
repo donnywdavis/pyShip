@@ -13,13 +13,14 @@ if __name__ == "__main__":
     board.add_ship("battleship", 4)
     board.add_ship("carrier", 6)
     board.add_ship("submarine", 3)
-    print(board.ship_positions)
+    board.add_ship("destroyer", 2)
     board.draw()
 
     # Loop to try and sink a ship
     turn = 1
     while turn <= board.turns:
-        row = input("\nSelect a row: ")
+        print("\nTurn {0}".format(turn))
+        row = input("Select a row: ")
         column = input("Select a column: ")
         selection = ((int(row) - 1), (int(column) - 1))
 

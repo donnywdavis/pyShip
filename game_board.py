@@ -1,5 +1,5 @@
 __author__ = 'donnywdavis'
-__project__ = 'Battleship'
+__project__ = 'pyShip'
 
 from random import randint
 
@@ -17,6 +17,7 @@ class GameBoard(object):
     MISS = "X"
     OCEAN = "O"
     SHIP = "S"
+    ships_sunk = 0
 
     def __init__(self, size, turns):
         """
@@ -36,7 +37,6 @@ class GameBoard(object):
         self.length = len(self.grid)
         self.ships = {}
         self.ship_positions = {}
-        self.ships_sunk = 0
 
     def draw(self):
         """

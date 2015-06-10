@@ -1,5 +1,5 @@
 __author__ = 'donnywdavis'
-__project__ = 'Battleship'
+__project__ = 'pyShip'
 
 from random import randint
 
@@ -17,6 +17,7 @@ class GameBoard(object):
     MISS = "X"
     OCEAN = "O"
     SHIP = "S"
+    ships_sunk = 0
 
     def __init__(self, size, turns):
         """
@@ -87,9 +88,10 @@ class GameBoard(object):
         """
 
         self.grid[row][column] = self.HIT
-        ship = self.get_ship_name([row, column])
+        ship = self.get_ship_name((row, column))
         self.ships[ship]["hits"] += 1
         if self.ships[ship]["hits"] == self.ships[ship]["length"]:
+            self.ships_sunk += 1
             print("You sank the %s" % ship)
         print("Boom!")
 
@@ -140,7 +142,7 @@ class GameBoard(object):
         :return:
         """
         self.ships.__setitem__(name, {})
-        self.ship_positions.__setitem__(name, [])
+        self.ship_positions.__setitem__(name, ())
         self.ships[name].__setitem__("length", length)
         self.ships[name].__setitem__("hits", 0)
         self.ship_positions.__setitem__(name, self.set_ship_position(length))
@@ -153,13 +155,13 @@ class GameBoard(object):
         :return: A list of points on the grid that the ship will occupy
         """
 
-        ship_position = []
+        ship_position = ()
         while self.position_in_use(ship_position):
-            start = [randint(0, (self.length - 1) - length), randint(0, self.length - 1)]
+            start = (randint(0, (self.length - 1) - length), randint(0, self.length - 1))
             if start[1] + length > 10:
-                ship_position = [[x, start[1]] for x in range(start[0], (length + start[0]))]
+                ship_position = tuple([(x, start[1]) for x in range(start[0], (length + start[0]))])
             else:
-                ship_position = [[start[0], y] for y in range(start[1], (length + start[1]))]
+                ship_position = tuple([(start[0], y) for y in range(start[1], (length + start[1]))])
         else:
             return ship_position
 
@@ -176,7 +178,7 @@ class GameBoard(object):
             return True
 
         for ship in self.ship_positions.keys():
-            if position in self.ship_positions[ship]:
+            if len(set(position) & set(self.ship_positions[ship])) > 0:
                 return True
         else:
             return False

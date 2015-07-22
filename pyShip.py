@@ -4,31 +4,29 @@ __project__ = 'pyShip'
 from player import Player
 
 
-players = []
-
-
 def setup_players():
     """
     Perform operations to set up the players that are going to play
     :return:
     """
 
+    players = []
     number_of_players = 0
     while number_of_players not in (1, 2):
         number_of_players = int(input('Select 1 or 2 players: '))
         if number_of_players not in (1, 2):
             print('Number of players must be 1 or 2')
-    else:
-        Player.number_of_players = number_of_players
 
     print('\nEnter player names:')
     index = 1
-    while index <= Player.number_of_players:
+    while index <= number_of_players:
         players.append(Player(index, input('Player {0}: '.format(index))))
         index += 1
 
-    if Player.number_of_players < 2:
+    if number_of_players < 2:
         players.append(Player(2, 'Computer'))
+
+    return players
 
 
 def main():
@@ -38,7 +36,7 @@ def main():
 
     print("Would you like to play a game?\n")
 
-    setup_players()
+    players = setup_players()
     current_player = players[0]
     next_player = players[1]
     game_on = True
@@ -46,7 +44,7 @@ def main():
     while game_on:
         print("\n{0}'s turn.\n".format(current_player.name))
         next_player.board.draw()
-        row = input("\nSelect a row: ")
+        row = input("\nSelect a row: ").upper()
         column = int(input("Select a column: "))
         game_on = False
 

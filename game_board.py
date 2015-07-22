@@ -22,6 +22,7 @@ class GameBoard(object):
         Initialize the GameBoard class
         """
         self.board = self.build_board()
+        self.ships = self.load_ships()
 
     def build_board(self):
         """
@@ -49,3 +50,39 @@ class GameBoard(object):
 
         for row in self.board:
             print(' '.join(row))
+
+    def load_ships(self):
+        """
+        Build dictionary of ships and their attributes
+        :return: Dictionary of ships
+        """
+
+        ships = {
+            'battleship': {
+                'length': 4,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'carrier': {
+                'length': 6,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'submarine': {
+                'length': 3,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'destroyer': {
+                'length': 3,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'cruiser': {
+                'length': 2,
+                'hits': 0,
+                'positions': tuple()
+            }
+        }
+
+        return ships

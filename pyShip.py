@@ -39,7 +39,16 @@ def main():
     print("Would you like to play a game?\n")
 
     setup_players()
+    current_player = players[0]
+    next_player = players[1]
+    game_on = True
 
+    while game_on:
+        print("\n{0}'s turn.\n".format(current_player.name))
+        next_player.board.draw()
+        row = input("\nSelect a row: ")
+        column = int(input("Select a column: "))
+        game_on = False
 
 if __name__ == '__main__':
     main()

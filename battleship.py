@@ -1,7 +1,7 @@
 __author__ = 'donnywdavis'
 __project__ = 'pyShip'
 
-from game_board import GameBoard
+from game_board_2 import GameBoard
 
 if __name__ == "__main__":
     print("Let's play Battleship!")

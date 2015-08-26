@@ -110,3 +110,5 @@ docs/_build/
 target/
 
 
+
+.python-version

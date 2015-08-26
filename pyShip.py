@@ -2,12 +2,27 @@ __author__ = 'donnywdavis'
 __project__ = 'pyShip'
 
 from player import Player
+from random import randint
+
+row_letter = {
+    2: 'A',
+    3: 'B',
+    4: 'C',
+    5: 'D',
+    6: 'E',
+    7: 'F',
+    8: 'G',
+    9: 'H',
+    10: 'I',
+    11: 'J'
+}
 
 
 def setup_players():
     """
     Perform operations to set up the players that are going to play
-    :return:
+
+    :return: List containing object for each player
     """
 
     players = []
@@ -45,9 +60,14 @@ def main():
     while game_on:
         print("\n{0}'s turn.\n".format(current_player.name))
         next_player.board.draw()
-        print(next_player.board.ships)
-        row = input("\nSelect a row: ").upper()
-        column = int(input("Select a column: "))
+        if current_player.name == 'Computer':
+            row = row_letter[randint(2, 11)]
+            print("\nSelect a row: {0}".format(row))
+            column = randint(1, 10)
+            print("Select a column: {0}".format(column))
+        else:
+            row = input("\nSelect a row: ").upper()
+            column = int(input("Select a column: "))
         if next_player.board.valid_position_selected(row, column):
             next_player.board.check_for_hit(row, column)
 

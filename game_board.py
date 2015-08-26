@@ -5,11 +5,24 @@ from random import randint
 
 
 used_positions = []
+row_number = {
+    'A': 2,
+    'B': 3,
+    'C': 4,
+    'D': 5,
+    'E': 6,
+    'F': 7,
+    'G': 8,
+    'H': 9,
+    'I': 10,
+    'J': 11
+}
 
 
 def position_in_use(positions):
     """
     Check if a group of positions is already in use for another ship
+
     :param positions: A tuple containing potential positions for the current ship
     :return: Boolean value of whether any of the positions are in use
     """
@@ -27,6 +40,7 @@ def position_in_use(positions):
 def set_ship_position(ships):
     """
     Calculate the positions of each ship on the board
+
     :param ships: Dictionary of available ships
     :return: The dictionary of ships with set positions
     """
@@ -65,16 +79,19 @@ class GameBoard(object):
 
         self.board = self.build_board()
         self.ships = self.load_ships()
+        self.total_ships = len(self.ships)
+        self.ships_sunk = 0
 
     def build_board(self):
         """
         Build the game board grid with 10 rows and 10 columns
+
         :return: A list containing the rows and columns of the board
         """
 
         grid = []
-        row_letter = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('H', '|'), ('I', '|'),
-                      ('J', '|'), ('K', '|')]
+        row_letter = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('G', '|'),
+                      ('H', '|'), ('I', '|'), ('J', '|')]
         column_number = [' ', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
         grid.append(column_number)
@@ -95,10 +112,24 @@ class GameBoard(object):
         for row in self.board:
             print(' '.join(row))
 
+    def show_remaining_ships(self):
+        """
+        Display the positions of the remaining ships
+        """
+
+        for ship, attr in self.ships.items():
+            for position in attr['positions']:
+                if self.board[position[0]][position[1]] == self.OCEAN:
+                    self.board[position[0]][position[1]] = self.SHIP
+
+        for row in self.board:
+            print(' '.join(row))
+
     @staticmethod
     def load_ships():
         """
         Build dictionary of ships and their attributes
+
         :return: Dictionary of ships
         """
 
@@ -133,3 +164,38 @@ class GameBoard(object):
         ships = set_ship_position(ships)
 
         return ships
+
+    def check_for_hit(self, row, column):
+        """
+        Check if the selected position is a hit or a miss
+
+        :param row: The row of the selection
+        :param column: The column of the selection
+        """
+
+        for ship, attr in self.ships.items():
+            if (row_number[row], (column + 1)) in attr['positions']:
+                self.board[row_number[row]][(column + 1)] = self.HIT
+                attr['hits'] += 1
+                print("\nBOOM! You got a hit.\n")
+                if attr['hits'] == attr['length']:
+                    self.ships_sunk += 1
+                    print("You sunk the {0}!\n".format(ship))
+                break
+        else:
+            self.board[row_number[row]][(column + 1)] = self.MISS
+            print("\nOops, no boom! You missed.\n")
+
+    def valid_position_selected(self, row, column):
+        """
+        Check if the position selected is valid
+
+        :param row: The selected row
+        :param column: The selected column
+        :return: Boolean if the position is valid or not
+        """
+
+        if self.board[row_number[row]][(column + 1)] == self.OCEAN:
+            return True
+        else:
+            return False

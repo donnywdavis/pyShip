@@ -38,15 +38,37 @@ def main():
 
     players = setup_players()
     current_player = players[0]
+    current_player_hold = players[0]
     next_player = players[1]
     game_on = True
 
     while game_on:
         print("\n{0}'s turn.\n".format(current_player.name))
         next_player.board.draw()
+        print(next_player.board.ships)
         row = input("\nSelect a row: ").upper()
         column = int(input("Select a column: "))
-        game_on = False
+        if next_player.board.valid_position_selected(row, column):
+            next_player.board.check_for_hit(row, column)
+
+            if next_player.board.total_ships == next_player.board.ships_sunk:
+                game_on = False
+            else:
+                # Swap players for the next round
+                current_player = next_player
+                next_player = current_player_hold
+                current_player_hold = current_player
+        else:
+            print("\nSelected position is not valid. Please select again.\n")
+
+    # Display all remaining ships for both players
+    print("\nGame Over\n")
+    print("{0} Wins".format(current_player.name))
+    print("\n{0}'s board.\n".format(current_player.name))
+    current_player.board.show_remaining_ships()
+
+    print("\n{0}'s board.\n".format(next_player.name))
+    next_player.board.show_remaining_ships()
 
 if __name__ == '__main__':
     main()

@@ -44,8 +44,10 @@ def main():
     while game_on:
         print("\n{0}'s turn.\n".format(current_player.name))
         next_player.board.draw()
+        print(next_player.board.ships)
         row = input("\nSelect a row: ").upper()
         column = int(input("Select a column: "))
+        next_player.board.check_for_hit(row, column)
         game_on = False
 
 if __name__ == '__main__':

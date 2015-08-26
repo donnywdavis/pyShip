@@ -5,6 +5,18 @@ from random import randint
 
 
 used_positions = []
+row_number = {
+    'A': 2,
+    'B': 3,
+    'C': 4,
+    'D': 5,
+    'E': 6,
+    'F': 7,
+    'G': 8,
+    'H': 9,
+    'I': 10,
+    'K': 11
+}
 
 
 def position_in_use(positions):
@@ -133,3 +145,18 @@ class GameBoard(object):
         ships = set_ship_position(ships)
 
         return ships
+
+    def check_for_hit(self, row, column):
+        """
+        Check if the selected position is a hit or a miss
+        :param row: The row of the selection
+        :param column: The column of the selection
+        """
+        for ship, attr in self.ships.items():
+            if (row_number[row], column) in attr['positions']:
+                self.board[row_number[row]][(column + 1)] = self.HIT
+                print("\nBOOM! You got a hit.\n")
+                break
+        else:
+            self.board[row_number[row]][(column + 1)] = self.MISS
+            print("\nOops, no boom! You missed.\n")

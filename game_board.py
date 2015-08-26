@@ -3,222 +3,220 @@ __project__ = 'pyShip'
 
 from random import randint
 
-"""
-Class to hold variables and methods
-needed for preparing and displaying the
-game board
-"""
+
+used_positions = []
+row_number = {
+    'A': 2,
+    'B': 3,
+    'C': 4,
+    'D': 5,
+    'E': 6,
+    'F': 7,
+    'G': 8,
+    'H': 9,
+    'I': 10,
+    'J': 11
+}
+
+
+def position_in_use(positions):
+    """
+    Check if a group of positions is already in use for another ship
+
+    :param positions: A tuple containing potential positions for the current ship
+    :return: Boolean value of whether any of the positions are in use
+    """
+
+    if not positions:
+        return True
+
+    for position in positions:
+        if position in used_positions:
+            return True
+    used_positions.extend(positions)
+    return False
+
+
+def set_ship_position(ships):
+    """
+    Calculate the positions of each ship on the board
+
+    :param ships: Dictionary of available ships
+    :return: The dictionary of ships with set positions
+    """
+
+    for ship, attr in ships.items():
+        positions = tuple()
+        while position_in_use(positions):
+            start = (randint(2, (11 - attr['length'])), randint(2, 11))
+            if start[1] + attr['length'] > 11:
+                positions = tuple([(x, start[1]) for x in range(start[0], (attr['length'] + start[0]))])
+            else:
+                positions = tuple([(start[0], y) for y in range(start[1], (attr['length'] + start[1]))])
+        else:
+            attr['positions'] = positions
+
+    return ships
 
 
 class GameBoard(object):
+    """
+    Class to hold variables and methods
+    needed for preparing and displaying the
+    game board
+    """
 
     # Global variables
     HIT = "H"
     MISS = "X"
     OCEAN = "O"
     SHIP = "S"
-    ships_sunk = 0
 
-    def __init__(self, size, turns):
+    def __init__(self):
         """
-        Initialization for the GameBoard class
-
-        :param size: The size of the game board grid
-        :param turns: The number of turns for the game
-        :return:
+        Initialize the GameBoard class
         """
 
-        self.size = size
-        self.turns = turns
-        # initialize the grid to the size specified
-        self.grid = []
-        for i in range(size):
-            self.grid.append([self.OCEAN] * size)
-        self.length = len(self.grid)
-        self.ships = {}
-        self.ship_positions = {}
+        self.board = self.build_board()
+        self.ships = self.load_ships()
+        self.total_ships = len(self.ships)
+        self.ships_sunk = 0
+
+    def build_board(self):
+        """
+        Build the game board grid with 10 rows and 10 columns
+
+        :return: A list containing the rows and columns of the board
+        """
+
+        grid = []
+        row_letter = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('G', '|'),
+                      ('H', '|'), ('I', '|'), ('J', '|')]
+        column_number = [' ', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+        grid.append(column_number)
+        grid.append(['-'] * 12)
+        for i in range(10):
+            row = []
+            row.extend(row_letter[i])
+            row.extend([self.OCEAN] * 10)
+            grid.append(row)
+
+        return grid
 
     def draw(self):
         """
-        Print the game board grid to the screen
-
-        :return:
+        Print the game board to the screen
         """
 
-        for row in self.grid:
-            print(" ".join(row))
+        for row in self.board:
+            print(' '.join(row))
 
-    def valid_selection(self, row, column):
+    def show_remaining_ships(self):
         """
-        Check if the selection was a valid point on the game board grid
-
-        :param row: The row that the selection is for
-        :param column: The column that the selection is for
-        :return: False if the row or column is outside of the grid size
-                 True if the row or column is inside the grid size
+        Display the positions of the remaining ships
         """
 
-        if row < 0 or row > (self.size - 1) or column < 0 or column > (self.size - 1):
-            return False
+        for ship, attr in self.ships.items():
+            for position in attr['positions']:
+                if self.board[position[0]][position[1]] == self.OCEAN:
+                    self.board[position[0]][position[1]] = self.SHIP
+
+        for row in self.board:
+            print(' '.join(row))
+
+    @staticmethod
+    def load_ships():
+        """
+        Build dictionary of ships and their attributes
+
+        :return: Dictionary of ships
+        """
+
+        ships = {
+            'battleship': {
+                'length': 4,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'carrier': {
+                'length': 6,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'submarine': {
+                'length': 3,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'destroyer': {
+                'length': 3,
+                'hits': 0,
+                'positions': tuple()
+            },
+            'cruiser': {
+                'length': 2,
+                'hits': 0,
+                'positions': tuple()
+            }
+        }
+
+        ships = set_ship_position(ships)
+
+        return ships
+
+    def check_for_hit(self, row, column):
+        """
+        Check if the selected position is a hit or a miss
+
+        :param row: The row of the selection
+        :param column: The column of the selection
+        """
+
+        for ship, attr in self.ships.items():
+            if (row_number[row], (column + 1)) in attr['positions']:
+                self.board[row_number[row]][(column + 1)] = self.HIT
+                attr['hits'] += 1
+                print("\nBOOM! You got a hit.\n")
+                if attr['hits'] == attr['length']:
+                    self.ships_sunk += 1
+                    print("You sunk the {0}!\n".format(ship))
+                break
         else:
-            return True
+            self.board[row_number[row]][(column + 1)] = self.MISS
+            print("\nOops, no boom! You missed.\n")
 
-    def position_already_selected(self, row, column):
+    def valid_position_selected(self, row, column):
         """
-        Check if a position has already been selected
+        Check if the position selected is valid
 
-        :param row: The row that the selection is for
-        :param column: The column that the selection is for
-        :return: True if the selection has already been used
-                 False if the selection has not been used
-        """
-
-        if self.grid[row][column] != self.OCEAN:
-            return True
-        else:
-            return False
-
-    def mark_hit(self, row, column):
-        """
-        Update the selected point on the grid as a hit
-
-        :param row: The row that the selection is for
-        :param column: The column that the selection is for
-        :return:
+        :param row: The selected row
+        :param column: The selected column
+        :return: Boolean if the position is valid or not
         """
 
-        self.grid[row][column] = self.HIT
-        ship = self.get_ship_name((row, column))
-        self.ships[ship]["hits"] += 1
-        if self.ships[ship]["hits"] == self.ships[ship]["length"]:
-            self.ships_sunk += 1
-            print("You sank the %s" % ship)
-        print("Boom!")
-
-    def mark_miss(self, row, column):
-        """
-        Update the selected point on the grid as a miss
-
-        :param row: The row that the selection is for
-        :param column: The column that the selection is for
-        :return:
-        """
-
-        self.grid[row][column] = self.MISS
-        print("Miss!")
-
-    def mark_ship_position(self, row, column):
-        """
-        Update the point on the grid as a ship
-
-        :param row: The row that the point is for
-        :param column: The column that the point is for
-        :return:
-        """
-
-        self.grid[row][column] = self.SHIP
-
-    def position_is_a_hit(self, row, column):
-        """
-        Check if a position on the grid is a hit
-
-        :param row: The row that the position is for
-        :param column: The column that the position is for
-        :return: True if the position is a hit
-                 False if the position is not a hit
-        """
-
-        if self.grid[row][column] == self.HIT:
-            return True
-        else:
-            return False
-
-    def add_ship(self, name, length):
-        """
-        Add a new ship to the game board grid
-
-        :param name: The name of the ship
-        :param length: The length of the ship
-        :return:
-        """
-        self.ships.__setitem__(name, {})
-        self.ship_positions.__setitem__(name, ())
-        self.ships[name].__setitem__("length", length)
-        self.ships[name].__setitem__("hits", 0)
-        self.ship_positions.__setitem__(name, self.set_ship_position(length))
-
-    def set_ship_position(self, length):
-        """
-        Calculate the positions for a ship on the game board based on the ships length
-
-        :param length: The length of the ship
-        :return: A list of points on the grid that the ship will occupy
-        """
-
-        ship_position = ()
-        while self.position_in_use(ship_position):
-            start = (randint(0, (self.length - 1) - length), randint(0, self.length - 1))
-            if start[1] + length > 10:
-                ship_position = tuple([(x, start[1]) for x in range(start[0], (length + start[0]))])
-            else:
-                ship_position = tuple([(start[0], y) for y in range(start[1], (length + start[1]))])
-        else:
-            return ship_position
-
-    def position_in_use(self, position):
-        """
-        Check to see if a given position is currently in use by another ship
-
-        :param position: A list containing row and column for a position
-        :return: True if the position is being used or if no position is passed
-                 False if the position is not being used
-        """
-
-        if not position:
-            return True
-
-        for ship in self.ship_positions.keys():
-            if len(set(position) & set(self.ship_positions[ship])) > 0:
-                return True
-        else:
+        # Check that we have a row selected
+        if not row:
             return False
 
-    def hit_detected(self, selection):
-        """
-        Check to see if we got a hit for the selected position
+        try:
+            row = int(row)
+            return False
+        except ValueError:
+            pass
 
-        :param selection: List containing row and column for a position on the grid
-        :return:
-        """
+        # Check that we have a column selected
+        if not column:
+            return False
 
-        for ship in self.ship_positions:
-            if selection in self.ship_positions[ship]:
-                return True
-        return False
+        # Check if we can convert the column to an integer value
+        try:
+            column = int(column)
+        except ValueError:
+            return False
 
-    def get_ship_name(self, position):
-        """
-        Get the ship name for a ship at a given position
-
-        :param position: List containing row and column for a position on the grid
-        :return:
-        """
-
-        for ship in self.ship_positions:
-            if position in self.ship_positions[ship]:
-                return ship
+        # Validate the row and column
+        if self.board[row_number[row]][(column + 1)] == self.OCEAN:
+            return True
         else:
-            return ""
-
-    def show_all_ships(self):
-        """
-        Update the grid to show the position of all ships and print that to the screen
-
-        :return:
-        """
-
-        for ship, positions in self.ship_positions.items():
-            for position in positions:
-                if not self.position_is_a_hit(position[0], position[1]):
-                    self.mark_ship_position(position[0], position[1])
-        self.draw()
+            return False

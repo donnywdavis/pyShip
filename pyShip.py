@@ -67,9 +67,9 @@ def main():
             print("Select a column: {0}".format(column))
         else:
             row = input("\nSelect a row: ").upper()
-            column = int(input("Select a column: "))
+            column = input("Select a column: ")
         if next_player.board.valid_position_selected(row, column):
-            next_player.board.check_for_hit(row, column)
+            next_player.board.check_for_hit(row, int(column))
 
             if next_player.board.total_ships == next_player.board.ships_sunk:
                 game_on = False

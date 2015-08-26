@@ -195,6 +195,27 @@ class GameBoard(object):
         :return: Boolean if the position is valid or not
         """
 
+        # Check that we have a row selected
+        if not row:
+            return False
+
+        try:
+            row = int(row)
+            return False
+        except ValueError:
+            pass
+
+        # Check that we have a column selected
+        if not column:
+            return False
+
+        # Check if we can convert the column to an integer value
+        try:
+            column = int(column)
+        except ValueError:
+            return False
+
+        # Validate the row and column
         if self.board[row_number[row]][(column + 1)] == self.OCEAN:
             return True
         else:

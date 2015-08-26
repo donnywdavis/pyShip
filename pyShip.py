@@ -44,11 +44,18 @@ def main():
     while game_on:
         print("\n{0}'s turn.\n".format(current_player.name))
         next_player.board.draw()
-        print(next_player.board.ships)
         row = input("\nSelect a row: ").upper()
         column = int(input("Select a column: "))
         next_player.board.check_for_hit(row, column)
+
         game_on = False
+
+    # Display all remaining ships for both players
+    print("\n{0}'s board.\n".format(current_player.name))
+    current_player.board.show_remaining_ships()
+
+    print("\n{0}'s board.\n".format(next_player.name))
+    next_player.board.show_remaining_ships()
 
 if __name__ == '__main__':
     main()

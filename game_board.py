@@ -107,6 +107,19 @@ class GameBoard(object):
         for row in self.board:
             print(' '.join(row))
 
+    def show_remaining_ships(self):
+        """
+        Display the positions of the remaining ships
+        """
+
+        for ship, attr in self.ships.items():
+            for position in attr['positions']:
+                if self.board[position[0]][position[1]] == self.OCEAN:
+                    self.board[position[0]][position[1]] = self.SHIP
+
+        for row in self.board:
+            print(' '.join(row))
+
     @staticmethod
     def load_ships():
         """
@@ -152,6 +165,7 @@ class GameBoard(object):
         :param row: The row of the selection
         :param column: The column of the selection
         """
+
         for ship, attr in self.ships.items():
             if (row_number[row], column) in attr['positions']:
                 self.board[row_number[row]][(column + 1)] = self.HIT

@@ -48,15 +48,18 @@ def main():
         print(next_player.board.ships)
         row = input("\nSelect a row: ").upper()
         column = int(input("Select a column: "))
-        next_player.board.check_for_hit(row, column)
+        if next_player.board.valid_position_selected(row, column):
+            next_player.board.check_for_hit(row, column)
 
-        if next_player.board.total_ships == next_player.board.ships_sunk:
-            game_on = False
+            if next_player.board.total_ships == next_player.board.ships_sunk:
+                game_on = False
+            else:
+                # Swap players for the next round
+                current_player = next_player
+                next_player = current_player_hold
+                current_player_hold = current_player
         else:
-            # Swap players for the next round
-            current_player = next_player
-            next_player = current_player_hold
-            current_player_hold = current_player
+            print("\nSelected position is not valid. Please select again.\n")
 
     # Display all remaining ships for both players
     print("\nGame Over\n")

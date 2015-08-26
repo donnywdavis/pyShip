@@ -15,7 +15,7 @@ row_number = {
     'G': 8,
     'H': 9,
     'I': 10,
-    'K': 11
+    'J': 11
 }
 
 
@@ -77,6 +77,8 @@ class GameBoard(object):
 
         self.board = self.build_board()
         self.ships = self.load_ships()
+        self.total_ships = len(self.ships)
+        self.ships_sunk = 0
 
     def build_board(self):
         """
@@ -85,8 +87,8 @@ class GameBoard(object):
         """
 
         grid = []
-        row_letter = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('H', '|'), ('I', '|'),
-                      ('J', '|'), ('K', '|')]
+        row_letter = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('G', '|'),
+                      ('H', '|'), ('I', '|'), ('J', '|')]
         column_number = [' ', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
         grid.append(column_number)
@@ -167,9 +169,13 @@ class GameBoard(object):
         """
 
         for ship, attr in self.ships.items():
-            if (row_number[row], column) in attr['positions']:
+            if (row_number[row], (column + 1)) in attr['positions']:
                 self.board[row_number[row]][(column + 1)] = self.HIT
+                attr['hits'] += 1
                 print("\nBOOM! You got a hit.\n")
+                if attr['hits'] == attr['length']:
+                    self.ships_sunk += 1
+                    print("You sunk the {0}!\n".format(ship))
                 break
         else:
             self.board[row_number[row]][(column + 1)] = self.MISS

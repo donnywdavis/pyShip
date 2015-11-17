@@ -1,6 +1,3 @@
-__author__ = 'donnywdavis'
-__project__ = 'pyShip'
-
 from game_board import GameBoard
 
 

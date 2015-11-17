@@ -1,6 +1,3 @@
-__author__ = 'donnywdavis'
-__project__ = 'pyShip'
-
 import player
 from random import randint
 

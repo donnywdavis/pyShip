@@ -1,7 +1,4 @@
-__author__ = 'donnywdavis'
-__project__ = 'pyShip'
-
-from player import Player
+import player
 from random import randint
 
 row_letter = {
@@ -18,32 +15,6 @@ row_letter = {
 }
 
 
-def setup_players():
-    """
-    Perform operations to set up the players that are going to play
-
-    :return: List containing object for each player
-    """
-
-    players = []
-    number_of_players = 0
-    while number_of_players not in (1, 2):
-        number_of_players = int(input('Select 1 or 2 players: '))
-        if number_of_players not in (1, 2):
-            print('Number of players must be 1 or 2')
-
-    print('\nEnter player names:')
-    index = 1
-    while index <= number_of_players:
-        players.append(Player(index, input('Player {0}: '.format(index))))
-        index += 1
-
-    if number_of_players < 2:
-        players.append(Player(2, 'Computer'))
-
-    return players
-
-
 def main():
     """
     Main function for the program
@@ -51,7 +22,7 @@ def main():
 
     print("Would you like to play a game?\n")
 
-    players = setup_players()
+    players = player.setup_players()
     current_player = players[0]
     current_player_hold = players[0]
     next_player = players[1]

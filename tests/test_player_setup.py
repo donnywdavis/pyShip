@@ -5,17 +5,29 @@ from app.player import Player
 class PlayerSetupTests(unittest.TestCase):
 
     def setUp(self):
-        self.player1 = Player(1, 'Player 1')
-        self.player2 = Player(2, 'Computer')
+        self.player = Player(1, 'Player 1', 2)
+        self.player2 = Player(2, 'Player 2', 2)
 
-    def test_player1_has_a_name(self):
-        self.assertNotEqual(self.player1.name, '')
+    def test_player_has_a_name(self):
+        self.assertNotEqual(self.player.name, '')
 
-    def test_player1_game_board_generated(self):
-        self.assertNotEqual(self.player1.board, None)
+    def test_player_game_board_generated(self):
+        self.assertNotEqual(self.player.board, None)
 
-    def test_player2_has_a_name(self):
-        self.assertNotEqual(self.player2.name, '')
+    def test_player_has_ships_generated(self):
+        self.assertNotEqual(self.player, None)
 
-    def test_player2_game_board_generated(self):
-        self.assertNotEqual(self.player2.board, None)
+    def test_player_has_correct_number_of_ships(self):
+        self.assertEqual(len(self.player.ships), 2)
+
+    def test_both_players_have_the_same_ships_loaded(self):
+        player1_ships = [self.player.ships[i].name for i in range(len(self.player.ships))]
+        player2_ships = [self.player2.ships[i].name for i in range(len(self.player2.ships))]
+        self.assertListEqual(player1_ships, player2_ships)
+
+    def test_player_has_ships_remaining(self):
+        self.assertTrue(self.player.has_remaining_ships())
+
+    def test_player_has_no_ships_remaining(self):
+        self.player.remaining_ships = 0
+        self.assertFalse(self.player.has_remaining_ships())

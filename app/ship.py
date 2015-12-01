@@ -64,3 +64,27 @@ class Ship(object):
 
     def __str__(self):
         return self.name
+
+    def hit(self, x, y):
+        """
+        Check if the ship is hit
+
+        :param x: The x coordinate for the ship
+        :param y: The y coordinate for the ship
+        :return: Boolean if the ship is hit
+        """
+
+        if set(self.positions).intersection(((x, y),)):
+            self.hits += 1
+            return True
+        else:
+            return False
+
+    def sunk(self):
+        """
+        Check if the ship is sunk
+
+        :return: Boolean if the ship has been sunk
+        """
+
+        return True if self.hits == self.length else False

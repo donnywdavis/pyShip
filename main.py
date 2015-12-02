@@ -58,10 +58,17 @@ def main():
         column = int(column) + 1
 
         if next_player.check_for_hit(row, column):
+            next_player.board.mark_hit(row, column)
             print(Fore.WHITE + "BOOM! You got a hit.")
+            ship = next_player.get_ship(row, column)
+            if ship.sunk():
+                next_player.remaining_ships -= 1
+                print(Fore.WHITE + "You sunk the {0}".format(ship.name))
+
             if not next_player.has_remaining_ships():
                 game_on = False
         else:
+            next_player.board.mark_miss(row, column)
             print(Fore.WHITE + "MISS! No boom for you.\n")
 
         current_player = next_player

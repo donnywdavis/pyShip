@@ -106,10 +106,10 @@ class GameBoard(object):
         except ValueError:
             return False
 
-        if row > 10:
+        if row > 11:
             return False
 
-        if column > 10:
+        if column > 11:
             return False
 
         return True if self.board[row][column] == self.__class__.OCEAN else False

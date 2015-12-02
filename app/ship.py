@@ -65,16 +65,16 @@ class Ship(object):
     def __str__(self):
         return self.name
 
-    def hit(self, x, y):
+    def hit(self, row, column):
         """
         Check if the ship is hit
 
-        :param x: The x coordinate for the ship
-        :param y: The y coordinate for the ship
+        :param row: The x coordinate for the ship
+        :param column: The y coordinate for the ship
         :return: Boolean if the ship is hit
         """
 
-        if set(self.positions).intersection(((x, y),)):
+        if set(self.positions).intersection(((row, column),)):
             self.hits += 1
             return True
         else:

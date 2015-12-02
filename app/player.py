@@ -30,21 +30,32 @@ class Player(object):
 
         return True if self.remaining_ships > 0 else False
 
-    def check_for_hit(self, x, y):
+    def check_for_hit(self, row, column):
         """
         Check if the selected position is a hit or not
 
-        :param x: The x coordinate of the position
-        :param y: The y coordinate of the position
+        :param row: The x coordinate of the position
+        :param column: The y coordinate of the position
         :return: Boolean if the ship is hit or not
         """
 
         for ship in self.ships:
-            if ship.hit(x, y):
-                self.board.mark_hit(x, y)
-                if ship.sunk():
-                    self.remaining_ships -= 1
+            if ship.hit(row, column):
                 return True
             else:
-                self.board.mark_miss(x, y)
                 return False
+
+    def get_ship(self, row, column):
+        """
+        Get the ship that is at the selected position
+
+        :param row: The x coordinate of the position
+        :param column: The y coordinate of the position
+        :return: Ship object
+        """
+
+        for ship in self.ships:
+            if set(ship.positions).intersection(((row, column),)):
+                return ship
+
+        return None

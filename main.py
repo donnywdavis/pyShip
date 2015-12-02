@@ -3,6 +3,9 @@ import argparse
 from app.player import Player
 import string
 import random
+from colorama import init, Fore
+
+init()
 
 
 def main():
@@ -29,12 +32,12 @@ def main():
     next_player = player2
     game_on = True
 
-    print("Welcome to pyShip!")
-    print("=" * 24)
+    print(Fore.WHITE + "Welcome to pyShip!")
+    print(Fore.WHITE + "=" * 24)
 
     while game_on:
-        print("\n{0}'s turn.".format(current_player.name))
-        print("=" * 24)
+        print(Fore.WHITE + "\n{0}'s turn.".format(current_player.name))
+        print(Fore.WHITE + "-" * 24)
         next_player.board.show()
         print("\n")
 
@@ -44,36 +47,41 @@ def main():
             while not next_player.board.position_is_valid(row, column):
                 row = random.choice(string.ascii_uppercase[:10])
                 column = random.randint(1, 10)
-            print("Select a row: {0}".format(row))
-            print("Select a column: {0}".format(column))
+            print(Fore.WHITE + "Select a row: {0}".format(row))
+            print(Fore.WHITE + "Select a column: {0}".format(column))
         else:
             while not next_player.board.position_is_valid(row, column):
-                row = input("Select a row: ").upper()
-                column = input("Select a column: ")
+                row = input(Fore.WHITE + "Select a row: ").upper()
+                column = input(Fore.WHITE + "Select a column: ")
 
         row = current_player.board.convert_row(row)
         column = int(column) + 1
 
-        print("\n")
-
         if next_player.check_for_hit(row, column):
-            print("BOOM! You got a hit.")
+            next_player.board.mark_hit(row, column)
+            print(Fore.WHITE + "BOOM! You got a hit.")
+            ship = next_player.get_ship(row, column)
+            if ship.sunk():
+                next_player.remaining_ships -= 1
+                print(Fore.WHITE + "You sunk the {0}".format(ship.name))
+
             if not next_player.has_remaining_ships():
                 game_on = False
         else:
-            print("MISS! No boom for you.\n")
+            next_player.board.mark_miss(row, column)
+            print(Fore.WHITE + "MISS! No boom for you.\n")
 
         current_player = next_player
         next_player = hold_current_player
         hold_current_player = current_player
 
-        print("=" * 24)
+        print(Fore.WHITE + "=" * 24)
 
-    print("\nGame Over\n")
-    print("{0} Wins.\n".format(current_player.name))
-    print("{0}'s board:\n".format(current_player.name))
+    print(Fore.WHITE + "\nGame Over\n")
+    print(Fore.WHITE + "{0} Wins.\n".format(current_player.name))
+    print(Fore.WHITE + "{0}'s board:\n".format(current_player.name))
     current_player.board.show_remaining(current_player.ships)
-    print("\n{0}'s board:\n".format(next_player.name))
+    print(Fore.WHITE + "\n{0}'s board:\n".format(next_player.name))
     next_player.board.show_remaining(next_player.ships)
 
 

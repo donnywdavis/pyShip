@@ -1,10 +1,13 @@
+from colorama import init, Fore
+
+
 class GameBoard(object):
 
     # Global constants
-    HIT = 'H'
-    MISS = 'M'
-    OCEAN = 'O'
-    SHIP = 'S'
+    HIT = Fore.RED + 'H' + Fore.RESET
+    MISS = Fore.CYAN + 'M' + Fore.RESET
+    OCEAN = Fore.BLUE + 'O' + Fore.RESET
+    SHIP = Fore.WHITE + 'S' + Fore.RESET
 
     def __init__(self):
         """
@@ -21,12 +24,13 @@ class GameBoard(object):
         """
 
         grid = []
-        columns = [' ', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-        rows = [('A', '|'), ('B', '|'), ('C', '|'), ('D', '|'), ('E', '|'), ('F', '|'), ('G', '|'), ('H', '|'),
-                ('I', '|'), ('J', '|')]
+        columns = [Fore.WHITE + ' ', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        rows = [(Fore.WHITE + 'A', '|'), (Fore.WHITE + 'B', '|'), (Fore.WHITE + 'C', '|'), (Fore.WHITE + 'D', '|'),
+                (Fore.WHITE + 'E', '|'), (Fore.WHITE + 'F', '|'), (Fore.WHITE + 'G', '|'), (Fore.WHITE + 'H', '|'),
+                (Fore.WHITE + 'I', '|'), (Fore.WHITE + 'J', '|')]
 
         grid.append(columns)
-        grid.append(['-'] * 12)
+        grid.append([Fore.WHITE + '-'] * 12)
         for i in range(10):
             row = []
             row.extend(rows[i])

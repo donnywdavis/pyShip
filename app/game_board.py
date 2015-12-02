@@ -1,5 +1,7 @@
 from colorama import init, Fore
 
+init()
+
 
 class GameBoard(object):
 

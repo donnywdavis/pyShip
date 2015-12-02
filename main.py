@@ -5,6 +5,8 @@ import string
 import random
 from colorama import init, Fore
 
+init()
+
 
 def main():
     """
